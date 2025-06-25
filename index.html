@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitroxic Seeds</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons for a clean look -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom styles for a polished look */
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* UPDATED: Reduced overlay opacity to make image more visible */
+            background-image: linear-gradient(rgba(17, 24, 39, 0.7), rgba(17, 24, 39, 0.7)), url('https://raw.githubusercontent.com/nitroxicseeds/Lista/main/imagen1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f3f4f6; /* text-gray-100 */
+        }
+        .cannabis-glow {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3), 0 0 5px rgba(34, 197, 94, 0.2);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.4);
+        }
+        /* Custom scrollbar for a better aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* bg-gray-800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #22c55e; /* bg-green-500 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #16a34a; /* bg-green-600 */
+        }
+        /* Hide number input spinners */
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type='number'] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Header Section -->
+    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 py-4 px-4 md:px-8 shadow-lg shadow-green-500/10">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i data-lucide="cannabis" class="w-8 h-8 text-green-400"></i>
+                <h1 class="text-2xl md:text-3xl font-bold text-white tracking-wider">Nitroxic <span class="text-green-400">Seeds</span></h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden md:block">
+                    <input type="text" id="searchInput" placeholder="Buscar genética..." class="bg-gray-800 border border-gray-700 text-white rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all w-40 md:w-64">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                </div>
+                <button id="cart-button" class="relative p-2 rounded-full hover:bg-gray-800 transition-colors">
+                    <i data-lucide="shopping-cart" class="text-white"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-green-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+         <div class="relative mt-4 md:hidden">
+            <input type="text" id="mobileSearchInput" placeholder="Buscar genética..." class="bg-gray-800 border border-gray-700 text-white rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all w-full">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="product-grid" class="container mx-auto p-4 md:p-8">
+        <!-- Products will be injected here by JavaScript -->
+    </main>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white py-2 px-5 rounded-lg shadow-lg opacity-0 translate-y-10 transition-all duration-300 flex items-center gap-2">
+        <i data-lucide="check-circle" class="w-5 h-5"></i>
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <!-- UPDATED: Increased sidebar opacity for better readability -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-gray-900/95 backdrop-blur-sm shadow-2xl shadow-black transform translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col">
+        <div class="flex justify-between items-center p-5 border-b border-gray-700">
+            <h2 class="text-2xl font-semibold text-white">Tu Consulta</h2>
+            <button id="close-cart-button" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
+                <i data-lucide="x" class="text-white"></i>
+            </button>
+        </div>
+        <div id="cart-items" class="flex-grow p-5 overflow-y-auto">
+            <!-- Cart items will be injected here -->
+            <p class="text-gray-400 text-center mt-10">Tu carrito está vacío.</p>
+        </div>
+        <div id="cart-footer" class="p-5 border-t border-gray-700">
+            <a id="whatsapp-button" href="#" target="_blank" class="hidden w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 mb-3">
+                <i data-lucide="send" class="w-5 h-5"></i>
+                Consultar
+            </a>
+            <button id="clear-cart-button" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                Vaciar Carrito
+            </button>
+        </div>
+    </div>
+    <div id="cart-overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA ---
+            const products = [
+                // Genéticas
+                { id: 1, name: "MIND FLAYER X TANGIE", category: "Genéticas" }, { id: 2, name: "SNOWBALL", category: "Genéticas" }, { id: 3, name: "ZTRAWBERRY", category: "Genéticas" }, { id: 4, name: "KALI MIST BLACK EDICION R", category: "Genéticas" }, { id: 5, name: "LEMON CHERRY", category: "Genéticas" }, { id: 6, name: "MIND FLAYER F7", category: "Genéticas" }, { id: 7, name: "BUBBLE GUM AUTO", category: "Genéticas" }, { id: 8, name: "GORILLA GLUE", category: "Genéticas" }, { id: 9, name: "FORBBIDEN FRUIT", category: "Genéticas" }, { id: 10, name: "SANTA MARTA HAZE X SOUR D", category: "Genéticas" }, { id: 11, name: "ZKITTLEZ", category: "Genéticas" }, { id: 12, name: "DARK BANANA HAZE", category: "Genéticas" }, { id: 13, name: "CHEESE AUTO", category: "Genéticas" }, { id: 14, name: "WIFI OG KUSH X TANGIE", category: "Genéticas" }, { id: 15, name: "BLUEBERRY X LEMON", category: "Genéticas" }, { id: 16, name: "LOBSTER CHERRY", category: "Genéticas" }, { id: 17, name: "SWEET CANDY KUSH", category: "Genéticas" }, { id: 18, name: "MONSTER SMASH AUTO", category: "Genéticas" }, { id: 19, name: "CITRUS CAKE", category: "Genéticas" }, { id: 20, name: "SOMANGO X SNOWBALL", category: "Genéticas" }, { id: 21, name: "LEMON TREE", category: "Genéticas" }, { id: 22, name: "TROPICANA COOKIES", category: "Genéticas" }, { id: 23, name: "24K", category: "Genéticas" }, { id: 24, name: "GELATO K1", category: "Genéticas" }, { id: 25, name: "BLUEBERRY AUTO", category: "Genéticas" }, { id: 26, name: "ICE TREE", category: "Genéticas" }, { id: 27, name: "PURPLE WHITE", category: "Genéticas" },
+                // AUTOFLORECIENTES DUTCH
+                { id: 28, name: "WHITE WIDOW", category: "AUTOFLORECIENTES DUTCH" }, { id: 29, name: "BANANA BLAZE", category: "AUTOFLORECIENTES DUTCH" }, { id: 30, name: "DESFRAN", category: "AUTOFLORECIENTES DUTCH" }, { id: 31, name: "MAZAR", category: "AUTOFLORECIENTES DUTCH" }, { id: 32, name: "BLACKBERRY KUSH", category: "AUTOFLORECIENTES DUTCH" }, { id: 33, name: "CHARLOTTE ANGEL", category: "AUTOFLORECIENTES DUTCH" }, { id: 34, name: "XTREME", category: "AUTOFLORECIENTES DUTCH" }, { id: 35, name: "COLORADO COOKIES", category: "AUTOFLORECIENTES DUTCH" }, { id: 36, name: "CRITICAL ORANGE PUNCH", category: "AUTOFLORECIENTES DUTCH" },
+                // FOTOPERIODICAS DUTCH
+                { id: 37, name: "BUBBA ISLAND KUSH", category: "FOTOPERIODICAS DUTCH" }, { id: 38, name: "STRAWBERRY COUGH", category: "FOTOPERIODICAS DUTCH" }, { id: 39, name: "CBD COMPASSION", category: "FOTOPERIODICAS DUTCH" }, { id: 40, name: "CBD KUSH", category: "FOTOPERIODICAS DUTCH" }, { id: 41, name: "JEORGES DIAMONS", category: "FOTOPERIODICAS DUTCH" }, { id: 42, name: "HIFI 4G", category: "FOTOPERIODICAS DUTCH" }, { id: 43, name: "SKUNK HAZE", category: "FOTOPERIODICAS DUTCH" }, { id: 44, name: "CBD FORCE", category: "FOTOPERIODICAS DUTCH" }, { id: 45, "name": "CRITICAL ORANGE PUNCH", category: "FOTOPERIODICAS DUTCH" }, { id: 46, "name": "DESFRAN", category: "FOTOPERIODICAS DUTCH" }, { id: 47, "name": "DURBAN POISON", category: "FOTOPERIODICAS DUTCH" }, { id: 48, "name": "HOLLANDS HOPE", category: "FOTOPERIODICAS DUTCH" }, { id: 49, "name": "MASTER KUSH", category: "FOTOPERIODICAS DUTCH" }, { id: 50, "name": "MERINGUE", category: "FOTOPERIODICAS DUTCH" }, { id: 51, "name": "SKYWALKER HAZE", category: "FOTOPERIODICAS DUTCH" }, { id: 52, "name": "SNOWBUD", category: "FOTOPERIODICAS DUTCH" },
+                // AUTOFLORECIENTES BSF
+                { id: 53, name: "GORILLA GLUE X7", category: "AUTOFLORECIENTES BSF" }, { id: 54, name: "MOBY-D XXL X7", category: "AUTOFLORECIENTES BSF" }, { id: 55, name: "TANGIE XXL X7", category: "AUTOFLORECIENTES BSF" }, { id: 56, name: "TANGIE XXL X4", category: "AUTOFLORECIENTES BSF" }, { id: 57, name: "ORANGE BLOSSOM XXL X4", category: "AUTOFLORECIENTES BSF" }, { id: 58, name: "ORANGE BLOSSOM XXL X7", category: "AUTOFLORECIENTES BSF" }, { id: 59, name: "ORANGE BLOSSOM XXL X12", category: "AUTOFLORECIENTES BSF" }, { id: 60, name: "CRITICAL +2 XXL X4", category: "AUTOFLORECIENTES BSF" }, { id: 61, name: "CRITICAL +2 XXL X7", category: "AUTOFLORECIENTES BSF" }, { id: 62, name: "LEBRON HAZE X7", category: "AUTOFLORECIENTES BSF" },
+                // BUDDHA SEEDS
+                { id: 63, name: "TANGIE", category: "BUDDHA SEEDS" }, { id: 64, name: "24k", category: "BUDDHA SEEDS" }, { id: 65, name: "MAGNUM XL", category: "BUDDHA SEEDS" }, { id: 66, name: "GORILLA COOKIES", category: "BUDDHA SEEDS" }, { id: 67, name: "MAGNUM", category: "BUDDHA SEEDS" }, { id: 68, name: "WEEDING CAKE", category: "BUDDHA SEEDS" },
+            ];
+            
+            let cart = JSON.parse(localStorage.getItem('nitroxicCart')) || {};
+
+            // --- DOM ELEMENTS ---
+            const productGrid = document.getElementById('product-grid');
+            const searchInput = document.getElementById('searchInput');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+            const cartButton = document.getElementById('cart-button');
+            const closeCartButton = document.getElementById('close-cart-button');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartOverlay = document.getElementById('cart-overlay');
+            const cartCount = document.getElementById('cart-count');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const whatsappButton = document.getElementById('whatsapp-button');
+            const clearCartButton = document.getElementById('clear-cart-button');
+
+            // --- FUNCTIONS ---
+
+            // Function to show a temporary toast message
+            function showToast(message) {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toast-message');
+                toastMessage.textContent = message;
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                toast.classList.add('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-10');
+                }, 3000);
+            }
+            
+            // Render products on the page
+            function renderProducts(filter = '') {
+                const filteredProducts = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
+                
+                if(filteredProducts.length === 0) {
+                    productGrid.innerHTML = `<div class="text-center col-span-full py-20">
+                        <i data-lucide="frown" class="w-16 h-16 mx-auto text-gray-500"></i>
+                        <h2 class="text-2xl mt-4 font-semibold text-white">No se encontraron resultados</h2>
+                        <p class="text-gray-400">Intenta con otro término de búsqueda.</p>
+                    </div>`;
+                    lucide.createIcons();
+                    return;
+                }
+
+                const groupedByCategory = filteredProducts.reduce((acc, product) => {
+                    (acc[product.category] = acc[product.category] || []).push(product);
+                    return acc;
+                }, {});
+
+                let html = '';
+                for (const category in groupedByCategory) {
+                    html += `
+                        <section class="mb-12">
+                            <h2 class="text-3xl font-bold text-white mb-2 border-l-4 border-green-500 pl-4">${category}</h2>
+                            <p class="text-gray-400 mb-6 pl-5">Nuestra selección premium de ${category.toLowerCase()}.</p>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+                                ${groupedByCategory[category].map(product => `
+                                    <!-- UPDATED: Increased card opacity for better readability -->
+                                    <div class="bg-gray-800/90 backdrop-blur-sm rounded-lg overflow-hidden shadow-lg transition-all duration-300 card-hover border border-gray-700 flex flex-col">
+                                        <div class="p-4 flex-grow flex flex-col justify-center">
+                                            <h3 class="text-base font-semibold text-white h-12 flex items-center justify-center text-center">${product.name}</h3>
+                                            <p class="text-xs text-green-400 font-medium mt-1 text-center">${product.category}</p>
+                                        </div>
+                                        <div class="p-3 bg-gray-800/50 mt-auto">
+                                            <button data-product-id="${product.id}" class="add-to-cart-btn w-full bg-green-600 hover:bg-green-700 text-white font-bold text-sm py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-1">
+                                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                                Agregar
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </section>
+                    `;
+                }
+                productGrid.innerHTML = html;
+                addEventListenersToButtons();
+                lucide.createIcons();
+            }
+
+            // Render items in the cart sidebar
+            function renderCart() {
+                const cartKeys = Object.keys(cart);
+
+                if (cartKeys.length === 0) {
+                    cartItemsContainer.innerHTML = '<p class="text-gray-400 text-center mt-10">Tu carrito está vacío.</p>';
+                } else {
+                    cartItemsContainer.innerHTML = cartKeys.map(productId => {
+                        const product = products.find(p => p.id == productId);
+                        const quantity = cart[productId];
+                        return `
+                        <div class="flex items-center justify-between gap-4 p-3 rounded-lg hover:bg-gray-700/50 transition-colors">
+                            <div class="flex-grow">
+                                <p class="font-semibold text-white">${product.name}</p>
+                                <p class="text-xs text-green-400 capitalize">${product.category.toLowerCase()}</p>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <button data-product-id="${productId}" class="quantity-btn decrease-quantity p-1 rounded-full bg-gray-700 hover:bg-gray-600">-</button>
+                                    <input type="number" value="${quantity}" min="1" class="quantity-input w-12 text-center bg-gray-800 border border-gray-700 rounded-md" data-product-id="${productId}">
+                                    <button data-product-id="${productId}" class="quantity-btn increase-quantity p-1 rounded-full bg-gray-700 hover:bg-gray-600">+</button>
+                                </div>
+                            </div>
+                            <button data-product-id="${productId}" class="remove-from-cart-btn p-2 rounded-full text-red-500 hover:bg-red-500/10 transition-colors">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        `;
+                    }).join('');
+                }
+
+                // Add event listeners for cart items
+                document.querySelectorAll('.quantity-btn').forEach(btn => btn.addEventListener('click', handleQuantityChange));
+                document.querySelectorAll('.quantity-input').forEach(input => input.addEventListener('change', handleQuantityInputChange));
+                document.querySelectorAll('.remove-from-cart-btn').forEach(btn => btn.addEventListener('click', handleRemoveFromCart));
+
+                updateCartState();
+                lucide.createIcons();
+            }
+            
+            // Update cart count and WhatsApp button visibility
+            function updateCartState() {
+                const totalItems = Object.keys(cart).length;
+                cartCount.textContent = totalItems;
+                cartCount.classList.toggle('hidden', totalItems === 0);
+
+                if (totalItems > 0) {
+                    whatsappButton.classList.remove('hidden');
+                    whatsappButton.classList.add('flex');
+                    updateWhatsappLink();
+                } else {
+                    whatsappButton.classList.add('hidden');
+                    whatsappButton.classList.remove('flex');
+                }
+                localStorage.setItem('nitroxicCart', JSON.stringify(cart));
+            }
+            
+            // Update the WhatsApp link with cart contents
+            function updateWhatsappLink() {
+                const phoneNumber = "5493541704840";
+                let message = "Hola Nitroxic Seeds, quisiera consultar stock por los siguientes productos:\n\n";
+                Object.entries(cart).forEach(([productId, quantity]) => {
+                    const product = products.find(p => p.id == productId);
+                    message += `- ${product.name} (${product.category}) (x${quantity})\n`;
+                });
+                whatsappButton.href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            }
+
+            // --- EVENT HANDLERS ---
+            function handleAddToCart(e) {
+                const productId = e.currentTarget.dataset.productId;
+                cart[productId] = (cart[productId] || 0) + 1;
+                showToast(`${products.find(p => p.id == productId).name} agregado.`);
+                renderCart();
+            }
+
+            function handleQuantityChange(e) {
+                const productId = e.currentTarget.dataset.productId;
+                if (e.currentTarget.classList.contains('increase-quantity')) {
+                    cart[productId]++;
+                } else if (e.currentTarget.classList.contains('decrease-quantity')) {
+                    cart[productId]--;
+                    if (cart[productId] <= 0) {
+                        delete cart[productId];
+                    }
+                }
+                renderCart();
+            }
+
+            function handleQuantityInputChange(e) {
+                const productId = e.currentTarget.dataset.productId;
+                let newQuantity = parseInt(e.currentTarget.value, 10);
+                if (isNaN(newQuantity) || newQuantity <= 0) {
+                    delete cart[productId];
+                } else {
+                    cart[productId] = newQuantity;
+                }
+                renderCart();
+            }
+            
+            function handleRemoveFromCart(e) {
+                const productId = e.currentTarget.dataset.productId;
+                delete cart[productId];
+                showToast(`${products.find(p => p.id == productId).name} eliminado.`);
+                renderCart();
+            }
+
+            function addEventListenersToButtons() {
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', handleAddToCart);
+                });
+            }
+
+            function toggleCart() {
+                cartSidebar.classList.toggle('translate-x-full');
+                cartOverlay.classList.toggle('hidden');
+            }
+            
+            // --- INITIALIZATION ---
+            renderProducts();
+            renderCart();
+            lucide.createIcons();
+
+            // Event Listeners
+            searchInput.addEventListener('input', () => renderProducts(searchInput.value));
+            mobileSearchInput.addEventListener('input', () => renderProducts(mobileSearchInput.value));
+            cartButton.addEventListener('click', toggleCart);
+            closeCartButton.addEventListener('click', toggleCart);
+            cartOverlay.addEventListener('click', toggleCart);
+            clearCartButton.addEventListener('click', () => {
+                cart = {};
+                showToast('Carrito vaciado.');
+                renderCart();
+            });
+        });
+    </script>
+</body>
+</html>
